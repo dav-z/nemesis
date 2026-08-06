@@ -1,0 +1,189 @@
+/* Nemesis Foundation Design System & Styles */
+
+:root {
+  --nemesis-black: #242424;
+  --nemesis-candlelight: #ffdc9a;
+  --nemesis-moonlight: #f5f1b9;
+  --nemesis-white: #faf93d;
+  --font-mono: 'HAL Timezone Mono', monospace;
+  --font-sans: 'Segoe UI', system-ui, -apple-system, sans-serif;
+  --transition-smooth: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@font-face {
+  font-family: 'HAL Timezone Mono';
+  src: url('HAL_Timezone_Mono/HALTimezoneMono-Book.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  overflow-x: hidden;
+  font-family: var(--font-sans);
+}
+
+/* First Row: Hero Header with Logo */
+.hero-section {
+  width: 100vw;
+  height: 55vh;
+  min-height: 380px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  overflow: hidden;
+  background-color: var(--nemesis-black);
+  /* Dark background applied ONLY to first row */
+  z-index: 10;
+}
+
+.logo-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+  transform-origin: center center;
+  will-change: transform;
+  transition: transform 0.05s linear;
+}
+
+.logo {
+  max-width: 90vw;
+  width: 940px;
+  height: auto;
+  object-fit: contain;
+  filter: drop-shadow(0px 8px 24px rgba(0, 0, 0, 0.4));
+  user-select: none;
+}
+
+/* Second Row: Overlay & Description Section (2 Columns) */
+.overlay-section {
+  width: 100vw;
+  position: relative;
+  overflow: hidden;
+  background-color: var(--nemesis-candlelight);
+}
+
+.overlay-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  width: 100%;
+  height: auto;
+  align-items: stretch;
+}
+
+/* Column 1: Image Overlay & Background Texture */
+.overlay-column.image-column {
+  position: relative;
+  width: 100%;
+  height: auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+}
+
+.background-texture {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-repeat: repeat;
+  background-size: cover;
+  background-position: center;
+  z-index: 1;
+}
+
+.overlay-image-wrapper {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+  height: auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.overlay-image {
+  width: 100%;
+  height: auto;
+  display: block;
+  object-fit: contain;
+  margin: 0;
+  padding: 0;
+  mix-blend-mode: multiply;
+  /* Blends the artwork onto the yellow background & halftone texture */
+}
+
+/* Column 2: Centered Description Text */
+.overlay-column.text-column {
+  position: relative;
+  z-index: 3;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 6% 8%;
+}
+
+.text-content {
+  width: 100%;
+  max-width: 90%;
+  text-align: center;
+  font-family: var(--font-mono);
+  color: var(--nemesis-black);
+  /* Fluid typography scaling text size proportionally to fit the image row height */
+  font-size: clamp(0.8rem, 1.35vw, 1.4rem);
+  line-height: 1.65;
+  letter-spacing: 0.4px;
+}
+
+.text-content p {
+  margin-bottom: 1.2em;
+}
+
+.text-content p:last-child {
+  margin-bottom: 0;
+}
+
+/* Responsive Breakpoints */
+@media (max-width: 960px) {
+  .overlay-row {
+    grid-template-columns: 1fr;
+  }
+
+  .overlay-column.text-column {
+    padding: 40px 24px;
+  }
+
+  .text-content {
+    font-size: clamp(0.9rem, 2.8vw, 1.25rem);
+    line-height: 1.6;
+  }
+}
+
+@media (max-width: 768px) {
+  .hero-section {
+    height: 45vh;
+    min-height: 280px;
+  }
+
+  .logo {
+    width: 320px;
+  }
+}
