@@ -12,34 +12,151 @@
 
 <body>
 
-    <!-- First Row: Centered Hero Logo with Scroll Expansion -->
+    <!-- First Row: Centered Hero Logo that shrinks into Fixed Nav Bar -->
     <header class="hero-section" id="hero-section">
         <div class="logo-wrapper" id="logo-wrapper">
-            <img src="logo/nemesis-foundation-logo-w_o-L.svg" alt="Nemesis Foundation Logo" class="logo" id="hero-logo">
+            <a href="#" class="logo-link">
+                <picture id="hero-logo-picture">
+                    <source media="(min-width: 1025px)" srcset="logo/nemesis-foundation-logo-w_o-L.svg">
+                    <source media="(min-width: 769px)" srcset="logo/nemesis-foundation-logo-w_o-M.svg">
+                    <source media="(max-width: 768px)" srcset="logo/nemesis-foundation-logo-w_o-S.svg">
+                    <img src="logo/nemesis-foundation-logo-w_o-S.svg" alt="Nemesis Foundation Logo" class="logo" id="hero-logo">
+                </picture>
+            </a>
         </div>
     </header>
 
-    <!-- Second Row: 2-Column Section (Column 1: Overlay Imagery, Column 2: Centered Description) -->
+    <!-- Spacer behind fixed header -->
+    <div class="hero-spacer"></div>
+
+    <!-- Second Row: Candlelight Row - 2 Columns (Column 1: Imagery, Column 2: Centered Description) -->
     <main>
-        <section class="overlay-section">
+        <section class="overlay-section" id="description-section">
             <div class="overlay-row">
                 <!-- Column 1: Image & Texture Overlay -->
                 <div class="overlay-column image-column">
                     <div class="background-texture"
                         style="background-image: url('textures/nemesis-foundation-halftone-A-02.svg');"></div>
                     <div class="overlay-image-wrapper">
-                        <img src="imagery /nemesis-foundation-image-04.svg" alt="Nemesis Foundation Overlay Image"
+                        <img src="imagery/nemesis-foundation-image-03.svg" alt="Nemesis Foundation Overlay Image"
                             class="overlay-image">
                     </div>
                 </div>
                 <!-- Column 2: Centered Description Text -->
-                <div class="overlay-column text-column">
+                <div class="overlay-column text-column description-column">
                     <div class="text-content">
                         <p>Nemesis is a private non-profit organization protecting artists and ideas that advance
                             psycho-spiritual exploration and cultural imagination; standing firmly behind those who
                             bring beauty and meaning to the world.</p>
                         <p>Through philanthropic investment, Nemesis helps cultivate conditions for transformative
                             creative work to flourish, thereby encouraging new ways of seeing to emerge.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Third Row: List of Grantees & Contact on Halftone Texture Background in Nemesis White -->
+        <section class="grantees-contact-section" id="grantees-section">
+            <div class="grantees-texture"
+                style="background-image: url('textures/nemesis-foundation-halftone-A-08.svg');"></div>
+            <div class="grantees-contact-container">
+                <!-- Column 1: Mythos Dropdown -->
+                <div class="dropdown-column" id="mythos-dropdown-col">
+                    <div class="accordion-item top-level-item">
+                        <button class="accordion-header top-level-header" aria-expanded="false" aria-controls="mythos-dropdown-content">
+                            <span class="dropdown-title">Mythos</span>
+                            <span class="accordion-icon">+</span>
+                        </button>
+                        <div class="accordion-content top-level-content" id="mythos-dropdown-content">
+                            <div class="mythos-details">
+                                <p class="under-construction-line">Under Construction</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Column 2: List of Grantees Dropdown -->
+                <div class="dropdown-column" id="grantees-dropdown-col">
+                    <div class="accordion-item top-level-item">
+                        <button class="accordion-header top-level-header" aria-expanded="false" aria-controls="grantees-dropdown-content">
+                            <span class="dropdown-title">List of Grantees</span>
+                            <span class="accordion-icon">+</span>
+                        </button>
+                        <div class="accordion-content top-level-content" id="grantees-dropdown-content">
+                            <div class="grantees-sub-accordions">
+                                <!-- Year 2025 Accordion -->
+                                <div class="accordion-item sub-item">
+                                    <button class="accordion-header sub-header" aria-expanded="false" aria-controls="grantees-2025">
+                                        <span class="year-label">2025</span>
+                                        <span class="accordion-icon">+</span>
+                                    </button>
+                                    <div class="accordion-content sub-content" id="grantees-2025">
+                                        <ul class="grantees-list">
+                                            <li>Artists Space</li>
+                                            <li>Community Leaders Resiliency Fund (Oregon Psilocybin)</li>
+                                            <li>Drawing Center</li>
+                                            <li>Free Arts NYC</li>
+                                            <li>Guggenheim</li>
+                                            <li>Healing Advocacy Fund</li>
+                                            <li>Indigenous Medicine Conservation Fund</li>
+                                            <li>Land Studio &amp; Gallery</li>
+                                            <li>Love Serve Remember Foundation</li>
+                                            <li>MoMA</li>
+                                            <li>MoMA PS1</li>
+                                            <li>N+1</li>
+                                            <li>Pioneer Works Art Foundation</li>
+                                            <li>The Netherland-America Foundation, Inc.</li>
+                                            <li>White Columns</li>
+                                        </ul>
+                                    </div>
+                                </div>
+
+                                <!-- Year 2024 Accordion -->
+                                <div class="accordion-item sub-item">
+                                    <button class="accordion-header sub-header" aria-expanded="false" aria-controls="grantees-2024">
+                                        <span class="year-label">2024</span>
+                                        <span class="accordion-icon">+</span>
+                                    </button>
+                                    <div class="accordion-content sub-content" id="grantees-2024">
+                                        <ul class="grantees-list">
+                                            <li>Community Leaders Resiliency Fund (Oregon Psilocybin)</li>
+                                            <li>Council For Native Hawaiian Advancement</li>
+                                            <li>Fireside</li>
+                                            <li>GHB Cluster Headache Trial</li>
+                                            <li>Hawaiian Natives Peyote Ceremony</li>
+                                            <li>Healing Advocacy Fund</li>
+                                            <li>How to Die (Psilocybin Hospice Doc)</li>
+                                            <li>Indigenous Artists &amp; Coca Assessment</li>
+                                            <li>Lalakea Foundation</li>
+                                            <li>Love Serve Remember Foundation</li>
+                                            <li>LSU Anti-Inflammation Research</li>
+                                            <li>N+1</li>
+                                            <li>Pioneer Works Art Foundation</li>
+                                            <li>Poi Foundation</li>
+                                            <li>Urban Indigenous Collective NY</li>
+                                            <li>Waipa Foundation</li>
+                                            <li>White Columns</li>
+                                            <li>World Health Organization Coca Leaf Advocacy</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Column 3: Contact Dropdown -->
+                <div class="dropdown-column" id="contact-dropdown-col">
+                    <div class="accordion-item top-level-item">
+                        <button class="accordion-header top-level-header" aria-expanded="false" aria-controls="contact-dropdown-content">
+                            <span class="dropdown-title">Contact</span>
+                            <span class="accordion-icon">+</span>
+                        </button>
+                        <div class="accordion-content top-level-content" id="contact-dropdown-content">
+                            <div class="contact-details">
+                                <p class="contact-line">Email: <a href="mailto:david@nmsfnd.org" class="contact-link">david@nmsfnd.org</a></p>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
