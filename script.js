@@ -1,209 +1,558 @@
-/**
- * Nemesis Foundation - Scripts
- * - 1:1 Seamless Fluid Hero Logo Shrink on Scroll into Top Nav Bar
- * - Expandable Grantees Accordion
- */
-document.addEventListener('DOMContentLoaded', () => {
-  // --- 1. Hero Logo Scroll Behavior (Hardware CSS Timeline + Universal Fluid JS Fallback) ---
-  function initHeroScroll() {
-    const heroSection = document.getElementById('hero-section');
-    const heroSpacer = document.querySelector('.hero-spacer');
-    const logoImg = document.getElementById('hero-logo');
+/* Nemesis Foundation Design System & Styles */
 
-    if (!heroSection || !logoImg) return;
+:root {
+  --nemesis-black: #242424;
+  --nemesis-candlelight: #ffdc9a;
+  --nemesis-moonlight: #f5f1b9;
+  --nemesis-white: #FAF9ED;
+  --font-mono: 'HAL Timezone Mono', 'Courier New', monospace;
+  --font-sans: 'HAL Timezone Mono', 'Courier New', monospace;
+  --transition-smooth: cubic-bezier(0.16, 1, 0.3, 1);
+}
 
-    // If native CSS scroll-driven animations are supported on desktop/tablet, let browser compositor handle it with 0 JS
-    if (window.CSS && CSS.supports && CSS.supports('animation-timeline', 'scroll()')) {
-      return;
-    }
+@font-face {
+  font-family: 'HAL Timezone Mono';
+  src: url('fonts/HALTimezoneMono-Book.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
 
-    let ticking = false;
-    let initialHeight = 380;
-    let minHeight = 72;
-    let maxScroll = 308;
-    let targetMinScale = 0.65;
-    let isMobile = false;
-    let lastWindowWidth = 0;
+@font-face {
+  font-family: 'DM Sans';
+  src: url('fonts/DMSans-Medium.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
 
-    let targetScrollY = 0;
-    let currentScrollY = 0;
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-weight: normal;
+}
 
-    function recalculateDimensions() {
-      const windowWidth = window.innerWidth;
+html,
+body,
+button,
+input,
+select,
+textarea {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  overflow-x: hidden;
+  font-family: var(--font-mono);
+  font-weight: normal;
+  background-color: var(--nemesis-black);
+}
 
-      // Ignore vertical-only height changes (e.g. mobile Safari URL bar collapsing during scroll)
-      if (windowWidth === lastWindowWidth && lastWindowWidth > 0) {
-        return;
-      }
-      lastWindowWidth = windowWidth;
+/* First Row: Hero Header with Logo (1:1 Fluid Shrink on Scroll into Top Navbar) */
+.hero-section {
+  width: 100%;
+  height: 380px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: fixed;
+  top: 0;
+  left: 0;
+  overflow: hidden;
+  background-color: var(--nemesis-black);
+  z-index: 1000;
+  will-change: height, box-shadow;
+  contain: layout paint;
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+  transform: translateZ(0);
+}
 
-      if (windowWidth <= 768) {
-        isMobile = true;
-        heroSection.style.height = '';
-        heroSection.style.boxShadow = '';
-        heroSection.style.borderBottom = '';
-        logoImg.style.transform = '';
-        if (heroSpacer) {
-          heroSpacer.style.height = '';
-        }
-        return;
-      }
+.hero-spacer {
+  width: 100%;
+  height: 380px;
+}
 
-      isMobile = false;
-      if (windowWidth <= 1024) {
-        initialHeight = 300;
-        minHeight = 72;
-        maxScroll = 228;
-        targetMinScale = 0.62;
-      } else {
-        initialHeight = 380;
-        minHeight = 72;
-        maxScroll = 308;
-        targetMinScale = 0.65;
-      }
+.logo-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+  padding: 0 24px;
+}
 
-      maxScroll = Math.max(1, initialHeight - minHeight);
+.logo-link {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-decoration: none;
+  height: 100%;
+}
 
-      if (heroSpacer) {
-        heroSpacer.style.height = `${initialHeight}px`;
-      }
-    }
+picture.logo-picture,
+.logo-link picture {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+}
 
-    function render() {
-      if (isMobile || window.innerWidth <= 768) {
-        ticking = false;
-        return;
-      }
+.logo {
+  max-width: 90vw;
+  max-height: 80%;
+  height: auto;
+  object-fit: contain;
+  user-select: none;
+  transform-origin: center center;
+  will-change: transform;
+  transform: translateZ(0);
+}
 
-      targetScrollY = Math.max(0, window.scrollY || window.pageYOffset || 0);
+/* Second Row: Overlay & Description Section (2 Columns) */
+.overlay-section {
+  width: 100%;
+  position: relative;
+  overflow: hidden;
+  background-color: var(--nemesis-candlelight);
+  z-index: 2;
+}
 
-      // Smooth Lerp dampening (absorbs fast scroll momentum spikes)
-      const diff = targetScrollY - currentScrollY;
-      if (Math.abs(diff) < 0.1) {
-        currentScrollY = targetScrollY;
-      } else {
-        currentScrollY += diff * 0.35;
-      }
+.overlay-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  width: 100%;
+  min-height: 480px;
+  align-items: stretch;
+}
 
-      // Clamp scroll progress between 0 and 1
-      const progress = Math.min(1, Math.max(0, currentScrollY / maxScroll));
+/* Column 1: Image Overlay & Background Texture */
+.overlay-column.image-column {
+  position: relative;
+  width: 100%;
+  min-height: 380px;
+  overflow: hidden;
+}
 
-      // Height shrinks seamlessly 1:1 with scroll position
-      const currentHeight = initialHeight - progress * (initialHeight - minHeight);
-      heroSection.style.height = `${currentHeight.toFixed(1)}px`;
+.background-texture {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-repeat: repeat;
+  background-size: cover;
+  background-position: center;
+  z-index: 1;
+}
 
-      // Scale logo smoothly using GPU compositor transform on desktop
-      const currentScale = 1 - progress * (1 - targetMinScale);
-      logoImg.style.transform = `scale(${currentScale.toFixed(4)}) translateZ(0)`;
+.overlay-image-wrapper {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 2;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
 
-      // Apply subtle navbar shadow and border when scrolled
-      if (progress > 0.01) {
-        const shadowAlpha = (progress * 0.5).toFixed(2);
-        const borderAlpha = (progress * 0.12).toFixed(2);
-        heroSection.style.boxShadow = `0 4px 20px rgba(0, 0, 0, ${shadowAlpha})`;
-        heroSection.style.borderBottom = `1px solid rgba(255, 255, 255, ${borderAlpha})`;
-      } else {
-        heroSection.style.boxShadow = 'none';
-        heroSection.style.borderBottom = 'none';
-      }
+.overlay-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  margin: 0;
+  padding: 0;
+  mix-blend-mode: multiply;
+  /* Blends the artwork onto the yellow background & halftone texture */
+}
 
-      // Continue animating until currentScrollY catches up with targetScrollY
-      if (Math.abs(targetScrollY - currentScrollY) > 0.1) {
-        requestAnimationFrame(render);
-      } else {
-        ticking = false;
-      }
-    }
+/* Column 2: Description Text Section */
+.overlay-column.text-column.description-column {
+  position: relative;
+  z-index: 3;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 6% 8%;
+}
 
-    function onScroll() {
-      if (isMobile || window.innerWidth <= 768) return;
-      if (!ticking) {
-        ticking = true;
-        requestAnimationFrame(render);
-      }
-    }
+.text-content {
+  width: 100%;
+  max-width: 90%;
+  text-align: center;
+  font-family: var(--font-mono);
+  color: var(--nemesis-black);
+  font-size: clamp(0.85rem, 1.35vw, 1.4rem);
+  line-height: 1.65;
+  letter-spacing: 0.4px;
+}
 
-    recalculateDimensions();
-    currentScrollY = Math.max(0, window.scrollY || window.pageYOffset || 0);
-    if (!isMobile) {
-      render();
-    }
+.text-content p {
+  margin-bottom: 1.2em;
+}
 
-    window.addEventListener('scroll', onScroll, { passive: true });
-    window.addEventListener('resize', () => {
-      recalculateDimensions();
-      if (!isMobile && !ticking) {
-        ticking = true;
-        requestAnimationFrame(render);
-      }
-    }, { passive: true });
+.text-content p:last-child {
+  margin-bottom: 0;
+}
+
+/* Third Row: Combined Grantees & Contact Dropdown Row on Halftone Texture Background */
+.grantees-contact-section {
+  width: 100%;
+  background-color: var(--nemesis-black);
+  color: var(--nemesis-white);
+  padding: 80px 8%;
+  font-family: var(--font-mono);
+  position: relative;
+  overflow: hidden;
+  z-index: 2;
+  min-height: 200px;
+}
+
+.grantees-texture {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-repeat: repeat;
+  background-size: cover;
+  background-position: center;
+  opacity: 0.95;
+  z-index: 1;
+  pointer-events: none;
+}
+
+.grantees-contact-container {
+  position: relative;
+  z-index: 2;
+  max-width: 1000px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: clamp(16px, 2.5vw, 24px);
+}
+
+.dropdown-column {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+/* Accordion Common Styles */
+.accordion-item {
+  background-color: transparent;
+  transition: border-color 0.2s ease;
+}
+
+.accordion-header {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: transparent;
+  border: none;
+  color: var(--nemesis-white);
+  cursor: pointer;
+  text-align: left;
+  user-select: none;
+}
+
+.accordion-icon {
+  font-size: 1.6rem;
+  font-weight: normal;
+  line-height: 1;
+  color: var(--nemesis-white);
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  display: inline-block;
+}
+
+.accordion-item.active > .accordion-header .accordion-icon {
+  transform: rotate(45deg);
+}
+
+.accordion-content {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Top-Level Dropdown Items ("List of Grantees" & "Contact") */
+.top-level-item {
+  border: none;
+}
+
+.top-level-header {
+  padding: 16px 0;
+  font-family: var(--font-mono);
+  font-size: clamp(1.3rem, 2vw, 1.85rem);
+  text-transform: uppercase;
+  letter-spacing: 2px;
+}
+
+.dropdown-title {
+  font-weight: normal;
+  color: var(--nemesis-white);
+}
+
+.top-level-content {
+  padding: 0;
+}
+
+/* Sub-level Accordions inside Grantees (2025, 2024) */
+.grantees-sub-accordions {
+  display: flex;
+  flex-direction: column;
+  margin-top: 4px;
+  margin-bottom: 20px;
+}
+
+.sub-item {
+  border: none;
+}
+
+.sub-header {
+  padding: 12px 0;
+  font-family: var(--font-mono);
+  font-size: clamp(1.1rem, 1.5vw, 1.35rem);
+  letter-spacing: 1px;
+}
+
+.year-label {
+  font-weight: normal;
+  color: var(--nemesis-white);
+}
+
+.sub-content {
+  padding: 0 4px;
+}
+
+.grantees-list {
+  list-style-type: square;
+  padding-left: 20px;
+  padding-bottom: 20px;
+  padding-top: 6px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  color: var(--nemesis-white);
+}
+
+.grantees-list li {
+  font-size: clamp(0.9rem, 1.15vw, 1.1rem);
+  line-height: 1.6;
+  letter-spacing: 0.3px;
+  color: var(--nemesis-white);
+}
+
+/* Contact & Mythos Details Expanded */
+.contact-details,
+.mythos-details,
+.mythology-details {
+  border: none;
+  margin-top: 4px;
+  padding: 12px 0 24px 0;
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+
+.contact-line,
+.under-construction-line {
+  margin: 0;
+  color: var(--nemesis-white);
+  font-size: clamp(0.95rem, 1.2vw, 1.2rem);
+  letter-spacing: 0.5px;
+  font-family: var(--font-mono);
+}
+
+.contact-link {
+  color: var(--nemesis-white);
+  text-decoration: underline;
+  text-underline-offset: 4px;
+  transition: opacity 0.2s ease;
+}
+
+.contact-link:hover {
+  opacity: 0.7;
+}
+
+/* Responsive Breakpoints */
+@media (max-width: 960px) {
+  .overlay-row {
+    grid-template-columns: 1fr;
+    min-height: auto;
   }
 
-  initHeroScroll();
+  .overlay-column.image-column {
+    height: 380px;
+    min-height: 320px;
+  }
 
-  // --- 2. Expandable Top-Level Dropdowns & Sub-Accordions ---
-  document.addEventListener('click', (e) => {
-    const header = e.target.closest('.accordion-header');
-    if (!header) return;
+  .overlay-column.text-column.description-column {
+    padding: 50px 24px;
+  }
 
-    const currentItem = header.closest('.accordion-item');
-    if (!currentItem) return;
+  .grantees-contact-section {
+    padding: 60px 5%;
+  }
 
-    const currentContent = currentItem.querySelector(':scope > .accordion-content');
-    if (!currentContent) return;
+  .grantees-contact-container {
+    gap: 20px;
+  }
 
-    const isCurrentlyExpanded = currentItem.classList.contains('active');
+  .top-level-header {
+    padding: 20px 4px;
+  }
 
-    // Case A: Top-level dropdown items ("List of Grantees" or "Contact")
-    if (currentItem.classList.contains('top-level-item')) {
-      if (isCurrentlyExpanded) {
-        // Collapse top-level item
-        currentContent.style.maxHeight = `${currentContent.scrollHeight}px`;
-        // Force reflow
-        void currentContent.offsetHeight;
-        currentContent.style.maxHeight = '0px';
-        currentItem.classList.remove('active');
-        header.setAttribute('aria-expanded', 'false');
-      } else {
-        // Expand top-level item
-        currentItem.classList.add('active');
-        header.setAttribute('aria-expanded', 'true');
-        currentContent.style.maxHeight = `${currentContent.scrollHeight + 32}px`;
-        
-        // After opening animation, allow unbounded height for nested sub-accordions
-        setTimeout(() => {
-          if (currentItem.classList.contains('active')) {
-            currentContent.style.maxHeight = 'none';
-          }
-        }, 400);
-      }
-      return;
+  .sub-header {
+    padding: 16px 4px;
+  }
+
+  .sub-content {
+    padding: 0 4px;
+  }
+
+  .contact-details,
+  .mythos-details,
+  .mythology-details {
+    padding: 20px 4px 24px 4px;
+  }
+}
+
+@media (min-width: 769px) and (max-width: 1024px) {
+  .hero-section {
+    height: 300px;
+  }
+
+  .hero-spacer {
+    height: 300px;
+  }
+}
+
+@media (max-width: 768px) {
+  .hero-section {
+    position: relative;
+    top: auto;
+    left: auto;
+    width: 100%;
+    height: 220px;
+    padding: 0 20px;
+    z-index: 10;
+    background-color: var(--nemesis-black);
+    box-shadow: none;
+    border-bottom: none;
+    contain: none;
+    transform: none !important;
+    animation: none !important;
+    will-change: auto;
+  }
+
+  .hero-spacer {
+    display: none;
+  }
+
+  .logo-wrapper {
+    padding: 0 16px;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .logo {
+    max-width: 85vw;
+    max-height: 80%;
+    width: auto;
+    height: auto;
+    object-fit: contain;
+    transform: none !important;
+    animation: none !important;
+    will-change: auto;
+  }
+
+  .overlay-column.image-column {
+    height: 300px;
+  }
+}
+
+/* Hardware-Accelerated Native Scroll-Driven Animations for Desktop & Tablet (> 768px) */
+@media (min-width: 1025px) {
+  @supports (animation-timeline: scroll()) {
+    .hero-section {
+      animation: heroScrollShrinkDesktop linear both;
+      animation-timeline: scroll(root);
+      animation-range: 0px 308px;
     }
 
-    // Case B: Sub-level accordion items (e.g. 2025, 2024 inside Grantees)
-    if (currentItem.classList.contains('sub-item')) {
-      const subContainer = currentItem.closest('.grantees-sub-accordions');
-      const allSubItems = subContainer ? subContainer.querySelectorAll('.sub-item') : [];
-
-      allSubItems.forEach(item => {
-        if (item !== currentItem) {
-          item.classList.remove('active');
-          const h = item.querySelector('.sub-header');
-          if (h) h.setAttribute('aria-expanded', 'false');
-          const c = item.querySelector(':scope > .accordion-content');
-          if (c) c.style.maxHeight = '0px';
-        }
-      });
-
-      if (isCurrentlyExpanded) {
-        currentContent.style.maxHeight = '0px';
-        currentItem.classList.remove('active');
-        header.setAttribute('aria-expanded', 'false');
-      } else {
-        currentItem.classList.add('active');
-        header.setAttribute('aria-expanded', 'true');
-        currentContent.style.maxHeight = `${currentContent.scrollHeight + 32}px`;
-      }
+    .logo {
+      animation: logoScrollScaleDesktop linear both;
+      animation-timeline: scroll(root);
+      animation-range: 0px 308px;
     }
-  });
-});
+  }
+}
+
+@keyframes heroScrollShrinkDesktop {
+  0% {
+    height: 380px;
+    box-shadow: 0 0 0 rgba(0, 0, 0, 0);
+    border-bottom-color: rgba(255, 255, 255, 0);
+  }
+  100% {
+    height: 72px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+    border-bottom-color: rgba(255, 255, 255, 0.12);
+  }
+}
+
+@keyframes logoScrollScaleDesktop {
+  0% {
+    transform: scale(1) translateZ(0);
+  }
+  100% {
+    transform: scale(0.65) translateZ(0);
+  }
+}
+
+@media (min-width: 769px) and (max-width: 1024px) {
+  @supports (animation-timeline: scroll()) {
+    .hero-section {
+      animation: heroScrollShrinkTablet linear both;
+      animation-timeline: scroll(root);
+      animation-range: 0px 228px;
+    }
+
+    .logo {
+      animation: logoScrollScaleTablet linear both;
+      animation-timeline: scroll(root);
+      animation-range: 0px 228px;
+    }
+  }
+}
+
+@keyframes heroScrollShrinkTablet {
+  0% {
+    height: 300px;
+    box-shadow: 0 0 0 rgba(0, 0, 0, 0);
+    border-bottom-color: rgba(255, 255, 255, 0);
+  }
+  100% {
+    height: 72px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+    border-bottom-color: rgba(255, 255, 255, 0.12);
+  }
+}
+
+@keyframes logoScrollScaleTablet {
+  0% {
+    transform: scale(1) translateZ(0);
+  }
+  100% {
+    transform: scale(0.62) translateZ(0);
+  }
+}
