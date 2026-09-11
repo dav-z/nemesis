@@ -4,15 +4,22 @@
   --nemesis-black: #242424;
   --nemesis-candlelight: #ffdc9a;
   --nemesis-moonlight: #f5f1b9;
-  --nemesis-white: #faf93d;
-  --font-mono: 'HAL Timezone Mono', monospace;
-  --font-sans: 'Segoe UI', system-ui, -apple-system, sans-serif;
+  --nemesis-white: #FAF9ED;
+  --font-mono: 'HAL Timezone Mono', 'Courier New', monospace;
+  --font-sans: 'HAL Timezone Mono', 'Courier New', monospace;
   --transition-smooth: cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 @font-face {
   font-family: 'HAL Timezone Mono';
-  src: url('HAL_Timezone_Mono/HALTimezoneMono-Book.ttf') format('truetype');
+  src: url('fonts/HALTimezoneMono-Book.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'DM Sans';
+  src: url('fonts/DMSans-Medium.ttf') format('truetype');
   font-weight: normal;
   font-style: normal;
 }
@@ -23,30 +30,47 @@
   box-sizing: border-box;
   margin: 0;
   padding: 0;
+  font-weight: normal;
 }
 
 html,
-body {
+body,
+button,
+input,
+select,
+textarea {
   margin: 0;
   padding: 0;
   width: 100%;
   overflow-x: hidden;
-  font-family: var(--font-sans);
+  font-family: var(--font-mono);
+  font-weight: normal;
+  background-color: var(--nemesis-black);
 }
 
-/* First Row: Hero Header with Logo */
+/* First Row: Hero Header with Logo (1:1 Fluid Shrink on Scroll into Top Navbar) */
 .hero-section {
-  width: 100vw;
-  height: 55vh;
-  min-height: 380px;
+  width: 100%;
+  height: 380px;
   display: flex;
   justify-content: center;
   align-items: center;
-  position: relative;
+  position: fixed;
+  top: 0;
+  left: 0;
   overflow: hidden;
   background-color: var(--nemesis-black);
-  /* Dark background applied ONLY to first row */
-  z-index: 10;
+  z-index: 1000;
+  will-change: height, box-shadow;
+  contain: layout paint;
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+  transform: translateZ(0);
+}
+
+.hero-spacer {
+  width: 100%;
+  height: 380px;
 }
 
 .logo-wrapper {
@@ -55,33 +79,50 @@ body {
   align-items: center;
   width: 100%;
   height: 100%;
-  transform-origin: center center;
-  will-change: transform;
-  transition: transform 0.05s linear;
+  padding: 0 24px;
+}
+
+.logo-link {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-decoration: none;
+  height: 100%;
+}
+
+picture.logo-picture,
+.logo-link picture {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
 }
 
 .logo {
   max-width: 90vw;
-  width: 940px;
+  max-height: 80%;
   height: auto;
   object-fit: contain;
-  filter: drop-shadow(0px 8px 24px rgba(0, 0, 0, 0.4));
   user-select: none;
+  transform-origin: center center;
+  will-change: transform;
+  transform: translateZ(0);
 }
 
 /* Second Row: Overlay & Description Section (2 Columns) */
 .overlay-section {
-  width: 100vw;
+  width: 100%;
   position: relative;
   overflow: hidden;
   background-color: var(--nemesis-candlelight);
+  z-index: 2;
 }
 
 .overlay-row {
   display: grid;
   grid-template-columns: 1fr 1fr;
   width: 100%;
-  height: auto;
+  min-height: 480px;
   align-items: stretch;
 }
 
@@ -89,10 +130,7 @@ body {
 .overlay-column.image-column {
   position: relative;
   width: 100%;
-  height: auto;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  min-height: 380px;
   overflow: hidden;
 }
 
@@ -109,10 +147,12 @@ body {
 }
 
 .overlay-image-wrapper {
-  position: relative;
-  z-index: 2;
+  position: absolute;
+  top: 0;
+  left: 0;
   width: 100%;
-  height: auto;
+  height: 100%;
+  z-index: 2;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -120,17 +160,17 @@ body {
 
 .overlay-image {
   width: 100%;
-  height: auto;
+  height: 100%;
+  object-fit: cover;
   display: block;
-  object-fit: contain;
   margin: 0;
   padding: 0;
   mix-blend-mode: multiply;
   /* Blends the artwork onto the yellow background & halftone texture */
 }
 
-/* Column 2: Centered Description Text */
-.overlay-column.text-column {
+/* Column 2: Description Text Section */
+.overlay-column.text-column.description-column {
   position: relative;
   z-index: 3;
   width: 100%;
@@ -147,8 +187,7 @@ body {
   text-align: center;
   font-family: var(--font-mono);
   color: var(--nemesis-black);
-  /* Fluid typography scaling text size proportionally to fit the image row height */
-  font-size: clamp(0.8rem, 1.35vw, 1.4rem);
+  font-size: clamp(0.85rem, 1.35vw, 1.4rem);
   line-height: 1.65;
   letter-spacing: 0.4px;
 }
@@ -161,29 +200,359 @@ body {
   margin-bottom: 0;
 }
 
+/* Third Row: Combined Grantees & Contact Dropdown Row on Halftone Texture Background */
+.grantees-contact-section {
+  width: 100%;
+  background-color: var(--nemesis-black);
+  color: var(--nemesis-white);
+  padding: 80px 8%;
+  font-family: var(--font-mono);
+  position: relative;
+  overflow: hidden;
+  z-index: 2;
+  min-height: 200px;
+}
+
+.grantees-texture {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-repeat: repeat;
+  background-size: cover;
+  background-position: center;
+  opacity: 0.95;
+  z-index: 1;
+  pointer-events: none;
+}
+
+.grantees-contact-container {
+  position: relative;
+  z-index: 2;
+  max-width: 1000px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: clamp(16px, 2.5vw, 24px);
+}
+
+.dropdown-column {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+/* Accordion Common Styles */
+.accordion-item {
+  background-color: transparent;
+  transition: border-color 0.2s ease;
+}
+
+.accordion-header {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: transparent;
+  border: none;
+  color: var(--nemesis-white);
+  cursor: pointer;
+  text-align: left;
+  user-select: none;
+}
+
+.accordion-icon {
+  font-size: 1.6rem;
+  font-weight: normal;
+  line-height: 1;
+  color: var(--nemesis-white);
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  display: inline-block;
+}
+
+.accordion-item.active > .accordion-header .accordion-icon {
+  transform: rotate(45deg);
+}
+
+.accordion-content {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Top-Level Dropdown Items ("List of Grantees" & "Contact") */
+.top-level-item {
+  border: none;
+}
+
+.top-level-header {
+  padding: 16px 0;
+  font-family: var(--font-mono);
+  font-size: clamp(1.3rem, 2vw, 1.85rem);
+  text-transform: uppercase;
+  letter-spacing: 2px;
+}
+
+.dropdown-title {
+  font-weight: normal;
+  color: var(--nemesis-white);
+}
+
+.top-level-content {
+  padding: 0;
+}
+
+/* Sub-level Accordions inside Grantees (2025, 2024) */
+.grantees-sub-accordions {
+  display: flex;
+  flex-direction: column;
+  margin-top: 4px;
+  margin-bottom: 20px;
+}
+
+.sub-item {
+  border: none;
+}
+
+.sub-header {
+  padding: 12px 0;
+  font-family: var(--font-mono);
+  font-size: clamp(1.1rem, 1.5vw, 1.35rem);
+  letter-spacing: 1px;
+}
+
+.year-label {
+  font-weight: normal;
+  color: var(--nemesis-white);
+}
+
+.sub-content {
+  padding: 0 4px;
+}
+
+.grantees-list {
+  list-style-type: square;
+  padding-left: 20px;
+  padding-bottom: 20px;
+  padding-top: 6px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  color: var(--nemesis-white);
+}
+
+.grantees-list li {
+  font-size: clamp(0.9rem, 1.15vw, 1.1rem);
+  line-height: 1.6;
+  letter-spacing: 0.3px;
+  color: var(--nemesis-white);
+}
+
+/* Contact & Mythos Details Expanded */
+.contact-details,
+.mythos-details,
+.mythology-details {
+  border: none;
+  margin-top: 4px;
+  padding: 12px 0 24px 0;
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+
+.contact-line,
+.under-construction-line {
+  margin: 0;
+  color: var(--nemesis-white);
+  font-size: clamp(0.95rem, 1.2vw, 1.2rem);
+  letter-spacing: 0.5px;
+  font-family: var(--font-mono);
+}
+
+.contact-link {
+  color: var(--nemesis-white);
+  text-decoration: underline;
+  text-underline-offset: 4px;
+  transition: opacity 0.2s ease;
+}
+
+.contact-link:hover {
+  opacity: 0.7;
+}
+
 /* Responsive Breakpoints */
 @media (max-width: 960px) {
   .overlay-row {
     grid-template-columns: 1fr;
+    min-height: auto;
   }
 
-  .overlay-column.text-column {
-    padding: 40px 24px;
+  .overlay-column.image-column {
+    height: 380px;
+    min-height: 320px;
   }
 
-  .text-content {
-    font-size: clamp(0.9rem, 2.8vw, 1.25rem);
-    line-height: 1.6;
+  .overlay-column.text-column.description-column {
+    padding: 50px 24px;
+  }
+
+  .grantees-contact-section {
+    padding: 60px 5%;
+  }
+
+  .grantees-contact-container {
+    gap: 20px;
+  }
+
+  .top-level-header {
+    padding: 20px 4px;
+  }
+
+  .sub-header {
+    padding: 16px 4px;
+  }
+
+  .sub-content {
+    padding: 0 4px;
+  }
+
+  .contact-details,
+  .mythos-details,
+  .mythology-details {
+    padding: 20px 4px 24px 4px;
+  }
+}
+
+@media (min-width: 769px) and (max-width: 1024px) {
+  .hero-section {
+    height: 300px;
+  }
+
+  .hero-spacer {
+    height: 300px;
   }
 }
 
 @media (max-width: 768px) {
   .hero-section {
-    height: 45vh;
-    min-height: 280px;
+    position: relative;
+    top: auto;
+    left: auto;
+    width: 100%;
+    height: 220px;
+    padding: 0 20px;
+    z-index: 10;
+    background-color: var(--nemesis-black);
+    box-shadow: none;
+    border-bottom: none;
+    contain: none;
+    transform: none !important;
+    animation: none !important;
+    will-change: auto;
+  }
+
+  .hero-spacer {
+    display: none;
+  }
+
+  .logo-wrapper {
+    padding: 0 16px;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
 
   .logo {
-    width: 320px;
+    max-width: 85vw;
+    max-height: 80%;
+    width: auto;
+    height: auto;
+    object-fit: contain;
+    transform: none !important;
+    animation: none !important;
+    will-change: auto;
+  }
+
+  .overlay-column.image-column {
+    height: 300px;
+  }
+}
+
+/* Hardware-Accelerated Native Scroll-Driven Animations for Desktop & Tablet (> 768px) */
+@media (min-width: 1025px) {
+  @supports (animation-timeline: scroll()) {
+    .hero-section {
+      animation: heroScrollShrinkDesktop linear both;
+      animation-timeline: scroll(root);
+      animation-range: 0px 308px;
+    }
+
+    .logo {
+      animation: logoScrollScaleDesktop linear both;
+      animation-timeline: scroll(root);
+      animation-range: 0px 308px;
+    }
+  }
+}
+
+@keyframes heroScrollShrinkDesktop {
+  0% {
+    height: 380px;
+    box-shadow: 0 0 0 rgba(0, 0, 0, 0);
+    border-bottom-color: rgba(255, 255, 255, 0);
+  }
+  100% {
+    height: 72px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+    border-bottom-color: rgba(255, 255, 255, 0.12);
+  }
+}
+
+@keyframes logoScrollScaleDesktop {
+  0% {
+    transform: scale(1) translateZ(0);
+  }
+  100% {
+    transform: scale(0.65) translateZ(0);
+  }
+}
+
+@media (min-width: 769px) and (max-width: 1024px) {
+  @supports (animation-timeline: scroll()) {
+    .hero-section {
+      animation: heroScrollShrinkTablet linear both;
+      animation-timeline: scroll(root);
+      animation-range: 0px 228px;
+    }
+
+    .logo {
+      animation: logoScrollScaleTablet linear both;
+      animation-timeline: scroll(root);
+      animation-range: 0px 228px;
+    }
+  }
+}
+
+@keyframes heroScrollShrinkTablet {
+  0% {
+    height: 300px;
+    box-shadow: 0 0 0 rgba(0, 0, 0, 0);
+    border-bottom-color: rgba(255, 255, 255, 0);
+  }
+  100% {
+    height: 72px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+    border-bottom-color: rgba(255, 255, 255, 0.12);
+  }
+}
+
+@keyframes logoScrollScaleTablet {
+  0% {
+    transform: scale(1) translateZ(0);
+  }
+  100% {
+    transform: scale(0.62) translateZ(0);
   }
 }
